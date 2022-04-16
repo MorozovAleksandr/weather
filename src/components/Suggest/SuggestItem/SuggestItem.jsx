@@ -1,6 +1,6 @@
-const SuggestItem = ({item}) => {
+const SuggestItem = ({value}) => {
   return (
-    <div>{item}</div>
+    <div>{value}</div>
   )
 }
 

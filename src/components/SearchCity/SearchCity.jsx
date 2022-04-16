@@ -2,34 +2,43 @@ import { useState } from "react";
 
 import SearchInput from "../SearchInput/SearchInput";
 import Suggest from "../Suggest/Suggest";
-import { cityMock } from "../../mock/mockCity";
+
+import { ozonCitySearchRequest } from "../../api/api";
+import { ozonCitiesMapping } from "../../utils/mapData";
 
 import "./SearchCity.css";
-
-const filterCity = (value, cities) =>
-  cities.filter((item) => item.indexOf(value) !== -1);
 
 const SearchCity = () => {
   const [searchCity, setSearchCity] = useState("");
   const [suggestVisible, setSuggestVisible] = useState(false);
-  const [cityList, setCityList] = useState(null);
+  const [cityList, setCityList] = useState([]);
 
-  const searchCityOnChage = (value) => {
+  const handlerInput = async (value) => {
     setSearchCity(value);
 
     if (value?.length) {
-      setSuggestVisible(true);
+      const getCities = await ozonCitySearchRequest(value);
+      const cities = ozonCitiesMapping(getCities.data);
 
-      setCityList(filterCity(value, cityMock));
+      setCityList(cities);
+      setSuggestVisible(true);
     } else {
       setSuggestVisible(false);
     }
   };
 
+  const handlerSelectCity = (e) => {
+    console.log(e);
+  }
+
   return (
     <div className="searchCity">
-      <SearchInput value={searchCity} cbOnChange={searchCityOnChage} />
-      {suggestVisible && <Suggest list={cityList} />}
+      <SearchInput value={searchCity} cbOnChange={handlerInput} />
+      {suggestVisible && (
+        <>
+          <Suggest list={cityList} />
+        </>
+      )}
     </div>
   );
 };
