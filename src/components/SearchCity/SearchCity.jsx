@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import SearchInput from "../SearchInput/SearchInput";
 import Suggest from "../Suggest/Suggest";
@@ -27,17 +27,32 @@ const SearchCity = () => {
     }
   };
 
-  const handlerSelectCity = (e) => {
-    console.log(e);
-  }
+  const handlerSelectCity = useCallback((item) => {
+    setSearchCity(item.title);
+    setSuggestVisible(false);
+  }, []);
+
+  const onClickHandlerInput = () => {
+    searchCity?.length && setSuggestVisible(true);
+  };
+
+  const closeSuggest = () => {
+    setSuggestVisible(false);
+  };
 
   return (
     <div className="searchCity">
-      <SearchInput value={searchCity} cbOnChange={handlerInput} />
+      <SearchInput
+        value={searchCity}
+        cbOnChange={handlerInput}
+        cbOnClick={onClickHandlerInput}
+      />
       {suggestVisible && (
-        <>
-          <Suggest list={cityList} />
-        </>
+        <Suggest
+          list={cityList}
+          cbHandlerSelect={handlerSelectCity}
+          cbCloseSuggest={closeSuggest}
+        />
       )}
     </div>
   );

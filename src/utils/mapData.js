@@ -1,6 +1,6 @@
 export const ozonCitiesMapping = (cities) =>
   cities.map((i) => ({
-    city: i.city,
+    title: i.fullName,
     geoCoordinate: i.geoCoordinate,
     areaId: i.areaId,
   }));
